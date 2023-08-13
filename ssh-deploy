@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+import argparse
+import paramiko
+
+def transfer_files(args):
+    # Connect to remote host
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(args.host, username=args.username, password=args.password)
+
+    # Transfer specified files to remote host
+    sftp = client.open_sftp()
+    for file in args.files:
+        destination = f"{args.remote_path}/{file.split('/')[-1]}"
+        print(f"Transferring {file} to {destination}")
+        sftp.put(file, destination)
+    sftp.close()
+
+    client.close()
+
+def execute_commands(args):
+    # Connect to remote host
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(args.host, username=args.username, password=args.password)
+
+    # Execute the specified command
+    print(f"Executing command: {args.command}")
+    stdin, stdout, stderr = client.exec_command(args.command)
+    for line in stdout:
+        print(line.strip())
+
+    for line in stderr:
+        print(line.strip())
+
+    client.close()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Execute actions on a remote host via SSH.')
+    subparsers = parser.add_subparsers()
+
+    # Subparser for transferring files
+    parser_transfer = subparsers.add_parser('transfer', help='Transfer files to remote host')
+    parser_transfer.add_argument('--host', required=True)
+    parser_transfer.add_argument('--username', required=True)
+    parser_transfer.add_argument('--password', required=True)
+    parser_transfer.add_argument('--files', nargs='+', required=True)
+    parser_transfer.add_argument('--remote-path', default='/tmp')
+    parser_transfer.set_defaults(func=transfer_files)
+
+    # Subparser for executing a command
+    parser_execute = subparsers.add_parser('execute', help='Execute a command on remote host')
+    parser_execute.add_argument('--host', required=True)
+    parser_execute.add_argument('--username', required=True)
+    parser_execute.add_argument('--password', required=True)
+    parser_execute.add_argument('--command', required=True)
+    parser_execute.set_defaults(func=execute_commands)
+
+    args = parser.parse_args()
+    args.func(args)
