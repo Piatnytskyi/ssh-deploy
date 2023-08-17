@@ -30,7 +30,7 @@ pip install paramiko
 Transfer specified files to a remote path:
 
 ```bash
-python transfer script.py --host HOST --username USERNAME --password PASSWORD --files file1.txt file2.txt --remote-path /remote/path
+./ssh-deploy transfer script.py --host HOST --username USERNAME --password PASSWORD --files file1.txt file2.txt --remote-path /remote/path
 ```
 
 ### Execute Command:
@@ -38,7 +38,7 @@ python transfer script.py --host HOST --username USERNAME --password PASSWORD --
 Execute specified command on a remote host:
 
 ```bash
-python execute script.py --host HOST --username USERNAME --password PASSWORD --command "cmd1"
+./ssh-deploy execute script.py --host HOST --username USERNAME --password PASSWORD --command "cmd1"
 ```
 
 ## Contribution
