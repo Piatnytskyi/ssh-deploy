@@ -19,8 +19,7 @@ ssh-deploy is a command-line utility designed to facilitate remote operations ov
 Clone the repository and install the required dependencies:
 
 ```bash
-git clone https://github.com/username/remote-ssh-tool.git
-cd remote-ssh-tool
+git clone https://github.com/Piatnytskyi/ssh-deploy.git
 pip install paramiko
 ```
 
